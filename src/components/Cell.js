@@ -12,7 +12,7 @@ class Cell extends React.Component {
     let oldFill;
     const fill = arr[row][cell];
 
-    let style = fill ? 'cell-div full' : 'cell-div';
+    let style = fill === 1 ? 'cell-div full' : 'cell-div';
 
     return (
       <div className={style}>

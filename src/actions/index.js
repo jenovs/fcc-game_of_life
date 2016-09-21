@@ -26,7 +26,7 @@ export function generateGrid(rows, cells) {
     for (let j = 0; j < cells; j++) {
       let fill;
       const rand = Math.random();
-      rand > 0.8 ? fill = true : fill = false;
+      rand > 0.8 ? fill = 1 : fill = 0;
       randRow.push(fill);
     }
     randArray.push(randRow);
@@ -59,15 +59,15 @@ export const getSeedGrid = (rows, cells) => {
   for (let i = 0; i < rows; i++) {
     let randRow = [];
     for (let j = 0; j < cells; j++) {
-      let fill = false;
+      let fill = 0;
       const rand = Math.random();
       randRow.push(fill);
     }
     randArray.push(randRow);
   }
-  randArray[1][1] = true;
-  randArray[1][2] = true;
-  randArray[1][3] = true;
+  randArray[1][1] = 1;
+  randArray[1][2] = 1;
+  randArray[1][3] = 1;
   return randArray;
 }
 
@@ -130,11 +130,11 @@ function newCell(array, row, cell) {
   // const neighbours = count.length
   // const neighbours = count;
   const currentCell = array[row][cell];
-  let newCell = false;
+  let newCell = 0;
   if (currentCell) {
-    if (neighbours === 2 || neighbours === 3) newCell = true;
+    if (neighbours === 2 || neighbours === 3) newCell = 1;
   } else {
-    if (neighbours === 3) newCell = true;
+    if (neighbours === 3) newCell = 1;
   }
 
   return newCell;

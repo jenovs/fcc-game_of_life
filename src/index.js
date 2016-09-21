@@ -11,7 +11,7 @@ import { getGrid, getNextGen, seedGrid } from './actions/index'
 const initialState = {
   grid: [],
   rows: 50,
-  cells: 50
+  cells: 70
 }
 
 const reducers = (state = initialState, action) => {
@@ -36,7 +36,7 @@ store.dispatch(getGrid(state.rows, state.cells));
 setInterval(() => {
   const state = store.getState();
   store.dispatch(getNextGen(state.grid));
-}, 50)
+}, 200)
 
 //-------To be deleted------------
 // setInterval(() => {
