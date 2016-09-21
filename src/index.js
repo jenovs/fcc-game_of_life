@@ -9,16 +9,22 @@ import './styles/index.scss';
 import { getGrid, getNextGen, seedGrid } from './actions/index'
 
 const initialState = {
+  generations: 0,
   grid: [],
+  isRunning: true,
   rows: 50,
-  cells: 70
+  cells: 50
 }
 
 const reducers = (state = initialState, action) => {
   switch (action.type) {
     case 'UPDATE_GRID':
       return {
-        ...state, grid: action.payload
+        ...state, grid: action.payload, generations: state.generations + 1
+      }
+    case 'STOP_GAME':
+      return {
+        ...state, isRunning: false
       }
     default:
       return state
@@ -32,11 +38,17 @@ const state = store.getState();
 store.dispatch(getGrid(state.rows, state.cells));
 // store.dispatch(seedGrid(state.rows, state.cells))
 
-
-setInterval(() => {
+store.subscribe(() => {
+  const state = store.getState();
+  if (!state.isRunning) {
+    clearInterval(intervalID);
+  }
+  // console.log('New state', state);
+})
+let intervalID = setInterval(() => {
   const state = store.getState();
   store.dispatch(getNextGen(state.grid));
-}, 200)
+}, 50)
 
 //-------To be deleted------------
 // setInterval(() => {

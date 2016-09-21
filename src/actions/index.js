@@ -12,9 +12,9 @@ export const startGame = () => {
   }
 }
 
-export const pauseGame = () => {
+export const stopGame = () => {
   return {
-    type: 'PAUSE_GAME'
+    type: 'STOP_GAME'
   }
 }
 
@@ -45,6 +45,7 @@ export const getNextGen = (grid) => {
 
 /////////////////
 // For testing
+// Delete later
 export const seedGrid = (rows, cells) => {
   const grid = getSeedGrid(rows, cells);
   return {
@@ -104,16 +105,6 @@ function newCell(array, row, cell) {
 
   let tempArr = [];
   let neighbours = 0;
-  // tempArr.push(array[upRow][leftCell])
-  // tempArr.push(array[upRow][cell])
-  // tempArr.push(array[upRow][rightCell])
-  //
-  // tempArr.push(array[row][leftCell])
-  // tempArr.push(array[row][rightCell])
-  //
-  // tempArr.push(array[downRow][leftCell])
-  // tempArr.push(array[downRow][cell])
-  // tempArr.push(array[downRow][rightCell])
 
   neighbours += array[upRow][leftCell]
   neighbours += array[upRow][cell]
@@ -126,9 +117,6 @@ function newCell(array, row, cell) {
   neighbours += array[downRow][cell]
   neighbours += array[downRow][rightCell]
 
-  // const count = tempArr.filter(a => a)
-  // const neighbours = count.length
-  // const neighbours = count;
   const currentCell = array[row][cell];
   let newCell = 0;
   if (currentCell) {
