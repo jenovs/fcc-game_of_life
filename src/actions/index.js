@@ -1,5 +1,4 @@
 export const getInitGrid = (rows, cells) => {
-  console.log('getInitGrid');
   const grid = generateGrid(rows, cells);
   const sum = reduceNestedArray(grid);
   return {
@@ -19,12 +18,6 @@ export const resetCommand = () => {
     type: 'RESET_COMMAND'
   }
 }
-
-// export const kickStart = () => {
-//   return {
-//     type: 'KICKSTART'
-//   }
-// }
 
 export const stopGame = () => {
   return {
@@ -55,7 +48,50 @@ export const toggleCell = (grid, row, cell) => {
   }
 }
 
-export const reduceNestedArray = (arr) => {
+export const comIncSpeed = () => {
+  return {
+    type: 'COMMAND_INC_SPEED'
+  }
+}
+
+export const comDecSpeed = () => {
+  console.log('action comDecSpeed');
+  return {
+    type: 'COMMAND_DEC_SPEED'
+  }
+}
+
+export const comStepOne = () => {
+  return {
+    type: 'COMMAND_STEP_ONE'
+  }
+}
+
+export const comRandomBoard = () => {
+  return {
+    type: 'COMMAND_RANDOM'
+  }
+}
+
+export const decSpeed = (time) => {
+  time += 50;
+  return {
+    type: 'SET_SPEED',
+    payload: { time }
+  }
+}
+
+
+export const incSpeed = (time) => {
+  time -= 50;
+  if (time < 50) time = 50;
+  return {
+    type: 'SET_SPEED',
+    payload: { time }
+  }
+}
+
+const reduceNestedArray = (arr) => {
   const rows = arr.length;
   const cols = arr[0].length;
   let sum = 0;
@@ -63,7 +99,6 @@ export const reduceNestedArray = (arr) => {
   for (let i = 0; i < rows; i++) {
     sum += arr[i].reduce((a, b) => a + b, 0)
   }
-  console.log(sum);
   return sum;
 }
 
@@ -132,50 +167,15 @@ export const notRunning = () => {
   }
 }
 
-
-/////////////////
-// For testing
-// Delete later
-export const seedGrid = (rows, cells) => {
-  const grid = getSeedGrid(rows, cells);
-  return {
-    type: 'UPDATE_GRID',
-    payload: grid
-  }
-}
-
-export const getSeedGrid = (rows, cells) => {
-  let randArray = [];
-
-  for (let i = 0; i < rows; i++) {
-    let randRow = [];
-    for (let j = 0; j < cells; j++) {
-      let fill = 0;
-      const rand = Math.random();
-      randRow.push(fill);
-    }
-    randArray.push(randRow);
-  }
-  randArray[1][1] = 1;
-  randArray[1][2] = 1;
-  randArray[1][3] = 1;
-  return randArray;
-}
-
-// End of testing
-//////////////////
-
-export function calcNextGen(grid) {
+function calcNextGen(grid) {
   const rows = grid.length;
   const cells = grid[0].length;
   let newGrid = [];
-  // let sum = 0;
   for (let i = 0; i < rows; i++) {
     let newRow = [];
     for (let j = 0; j < cells; j++) {
       newRow.push(newCell(grid, i, j));
     }
-    // sum += newRow.reduce((a, b) => a + b, 0)
     newGrid.push(newRow);
   }
   return newGrid;

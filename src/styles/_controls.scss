@@ -1,0 +1,47 @@
+.btn {
+  background-color: gray;
+  border: none;
+  border-radius: 2px;
+  color: white;
+  font-weight: bold;
+  height: 2rem;
+  margin: 0.1rem;
+  width: 5rem;
+
+  &:disabled {
+    background-color: lightgray;
+    color: #aaa;
+    cursor: not-allowed;
+  }
+}
+
+.btn-danger {
+  background-color: $btn-danger-color;
+
+  &:hover {
+    background-color: darken($btn-danger-color, 5%);
+  }
+}
+
+.btn-primary {
+  background-color: $btn-primary-color;
+
+  &:hover {
+    background-color: darken($btn-primary-color, 5%);
+  }
+}
+.buttons-div {
+  margin: 1rem auto;
+}
+.controls-div {
+  margin: 1rem auto
+}
+.i-font {
+  font-size: 1.1rem;
+}
+
+.title-speed {
+  display: inline-block;
+  text-align: center;
+  width: 5.2rem;
+}

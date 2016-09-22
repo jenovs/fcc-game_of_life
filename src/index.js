@@ -2,24 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { applyMiddleware, compose, combineReducers, createStore } from 'redux';
 import { Provider } from 'react-redux';
-// import thunk from 'redux-thunk'
 
 import App from 'App';
 import './styles/index.scss';
-import { clearBoard, getInitGrid, getNewBoard, seedGrid, startGame, saveIntervalID, setIntervalNull, isRunning, notRunning, step, resetCommand } from './actions/index'
+import { clearBoard, getInitGrid, getNewBoard, startGame, saveIntervalID, isRunning, notRunning, resetCommand, incSpeed, decSpeed } from './actions/index'
 
 const initialState = {
   command: false,
   generations: 0,
   grid: [],
-  gridCount: 1,
+  gridCount: 0,
   intervalID: undefined,
   isRunning: false,
   stop: false,
   start: false,
+  time: 250,
   clear: false,
-  rows: 10,
-  cells: 10
+  incSpeed: false,
+  decSpeed: false,
+  random: false,
+  rows: 60,
+  cells: 80
 }
 
 const reducers = (state = initialState, action) => {
@@ -35,7 +38,6 @@ const reducers = (state = initialState, action) => {
     case 'CLEAR_BOARD':
       return {
         ...state, grid: action.payload.grid, generations: 0, gridCount: 0
-        // , grid: action.payload, generations: 0, intervalID: undefined
       }
     case 'COMMAND_CLEAR_BOARD':
       return {
@@ -51,7 +53,27 @@ const reducers = (state = initialState, action) => {
       }
     case 'RESET_COMMAND':
       return {
-        ...state, command: false, start: false, stop: false
+        ...state, command: false, start: false, stop: false, clear: false, incSpeed: false, decSpeed: false, stepOne: false, random: false
+      }
+    case 'COMMAND_INC_SPEED':
+      return {
+        ...state, command: true, incSpeed: true
+      }
+    case 'COMMAND_DEC_SPEED':
+      return {
+        ...state, command: true, decSpeed: true
+      }
+    case 'COMMAND_STEP_ONE':
+      return {
+        ...state, command: true, stepOne: true
+      }
+    case 'COMMAND_RANDOM':
+      return {
+        ...state, command: true, random: true
+      }
+    case 'SET_SPEED':
+      return {
+        ...state, time: action.payload.time
       }
     case 'SAVE_INTERVAL_ID':
       return {
@@ -65,10 +87,6 @@ const reducers = (state = initialState, action) => {
       return {
         ...state, grid: action.payload.grid, generations: 1, gridCount: action.payload.sum
       }
-    // case 'KICKSTART':
-    //   return {
-    //     ...state, intervalID: 1, stop: false, start: true
-    //   }
     case 'IS_RUNNING':
       return {
         ...state, stop: false, start: false, isRunning: true
@@ -84,95 +102,73 @@ const reducers = (state = initialState, action) => {
 
 const store = createStore(reducers, (window.devToolsExtension ? window.devToolsExtension() : noop => noop));
 
-// Get initial random grid
 const state = store.getState();
+
+// Get initial random grid
 store.dispatch(getInitGrid(state.rows, state.cells));
 
 store.subscribe(() => {
   const state = store.getState();
-
+  // commands
   if (state.command) {
-
+    // start
     if (state.start) {
       store.dispatch(resetCommand());
       store.dispatch(isRunning());
       let intervalID = setInterval(() => {
         const state = store.getState();
         store.dispatch(getNewBoard(state.grid, state.gridCount));
-      }, 500)
+      }, state.time)
       store.dispatch(saveIntervalID(intervalID));
     }
-
-    if (state.stop) {
+    // stop
+    else if (state.stop) {
       store.dispatch(resetCommand());
       store.dispatch(notRunning());
       clearInterval(state.intervalID);
     }
-
-    if (state.clear) {
+    // clear
+    else if (state.clear) {
       store.dispatch(resetCommand());
       store.dispatch(clearBoard(state.rows, state.cells));
     }
+    // increase speed
+    else if (state.incSpeed) {
+      const wasRunning = state.isRunning;
+      store.dispatch(resetCommand());
+      store.dispatch(notRunning());
+      clearInterval(state.intervalID);
+      store.dispatch(incSpeed(state.time));
+      if (wasRunning) {
+        store.dispatch(startGame());
+      }
+    }
+    // decrease speed
+    else if (state.decSpeed) {
+      const wasRunning = state.isRunning;
+      store.dispatch(resetCommand());
+      store.dispatch(notRunning());
+      clearInterval(state.intervalID);
+      store.dispatch(decSpeed(state.time));
+      if (wasRunning) {
+        store.dispatch(startGame());
+      }
+    }
+    // step
+    else if (state.stepOne) {
+      store.dispatch(resetCommand());
+      store.dispatch(getNewBoard(state.grid, state.gridCount));
+    }
+    // random board
+    else if (state.random) {
+      store.dispatch(resetCommand());
+      store.dispatch(getInitGrid(state.rows, state.cells));
+    }
   }
-
-  // if (!state.generations && state.start && !state.isRunning) {
-  //   store.dispatch(getGrid(state.rows, state.cells));
-  // }
-  // if (state.gridCount === 0 && state.isRunning && state.generations !== 0) {
-  //   console.log('first if');
-  //   // ==========Temp brute force===========
-  //   for (var i = 1; i < 99999; i++) {
-  //     window.clearInterval(i);
-  //   }
-  //   //======================================
-  //
-  //   store.dispatch(notRunning())
-  // }
-  //
-  // else if (state.start && !state.isRunning) {
-  //   console.log('second if');
-  //   store.dispatch(isRunning());
-  //   let intervalID = setInterval(() => {
-  //     const state = store.getState();
-  //     store.dispatch(getNewBoard(state.grid));
-  //   }, 200)
-  //   store.dispatch(saveIntervalID(intervalID));
-  //   // store.dispatch(getNewBoard(state.grid));
-  // }
-  //
-  // else if (state.stop && state.isRunning) {
-  //   console.log('third if');
-  //   // clearInterval(state.intervalID);
-  //
-  //   // ==========Temp brute force===========
-  //   for (var i = 1; i < 99999; i++) {
-  //     window.clearInterval(i);
-  //   }
-  //   //======================================
-  //
-  //
-  //   store.dispatch(notRunning())
-  // }
 })
 
-// let intervalID = setInterval(() => {
-//   const state = store.getState();
-//   store.dispatch(getNewBoard(state.grid));
-// }, 200)
-
-//-------To be deleted------------
-// setInterval(() => {
-//   const state = store.getState();
-//   store.dispatch(getNewBoard(state.grid))
-// }, 1000)
-//---------------------
-
-// For testing
-// setTimeout(() => {
-//   const state = store.getState();
-//   store.dispatch(getNewBoard(state.grid))
-// }, 1000)
-
+// start the game
+store.dispatch(startGame());
 
 ReactDOM.render(
   <Provider store={store}>
