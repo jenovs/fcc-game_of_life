@@ -18,17 +18,17 @@
 .btn-danger {
   background-color: $btn-danger-color;
 
-  &:hover {
-    background-color: darken($btn-danger-color, 5%);
-  }
+  // &:hover {
+  //   background-color: darken($btn-danger-color, 5%);
+  // }
 }
 
 .btn-primary {
   background-color: $btn-primary-color;
 
-  &:hover {
-    background-color: darken($btn-primary-color, 5%);
-  }
+  // &:hover {
+  //   background-color: darken($btn-primary-color, 5%);
+  // }
 }
 .buttons-div {
   margin: 1rem auto;
@@ -39,7 +39,17 @@
 .i-font {
   font-size: 1.1rem;
 }
-
+.label-div {
+  display: inline-block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: left;
+  width: 15rem;
+  margin-left: 3.5rem;
+}
+.speed-div {
+  margin-top: 1.5rem;
+}
 .title-speed {
   display: inline-block;
   text-align: center;

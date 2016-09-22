@@ -74,7 +74,7 @@ export const comRandomBoard = () => {
 }
 
 export const decSpeed = (time) => {
-  time += 50;
+  time += 100;
   return {
     type: 'SET_SPEED',
     payload: { time }
@@ -83,7 +83,7 @@ export const decSpeed = (time) => {
 
 
 export const incSpeed = (time) => {
-  time -= 50;
+  time -= 100;
   if (time < 50) time = 50;
   return {
     type: 'SET_SPEED',

@@ -24,18 +24,18 @@ class Controls extends React.Component {
 
     return (
       <div className='controls-div'>
-        <p>Generations: {generations}</p>
-        <p>Population: {gridCount}</p>
+        <div className='label-div'>Generations: {generations}</div>
+        <div className='label-div'>Population: {gridCount}</div>
         <div className='speed-div'>
-          <button className='btn' disabled={disableMinus} onClick={() => comDecSpeed()}>Speed <i className='i-font'>-</i></button>
+          <button className='btn btn-primary' disabled={disableMinus} onClick={() => comDecSpeed()}>Speed <i className='i-font'>-</i></button>
           <div className='title-speed'>{10 - time / 50}</div>
-          <button className='btn' disabled={disablePlus} onClick={() => comIncSpeed()}>Speed <i className='i-font'>+</i></button>
+          <button className='btn btn-primary' disabled={disablePlus} onClick={() => comIncSpeed()}>Speed <i className='i-font'>+</i></button>
         </div>
         <div className='buttons-div'>
           {renderStartStop()}
-          <button className='btn' disabled={isRunning} onClick={() => comStepOne()}>Step &#9197;</button>
+          <button className='btn btn-primary' disabled={isRunning} onClick={() => comStepOne()}>Step &#9197;</button>
           <button className='btn btn-danger' disabled={isRunning} onClick={() => comClearBoard(grid.length, grid[0].length)}>Clear</button>
-          <button className='btn' disabled={isRunning} onClick={() => comRandomBoard()}>Random</button>
+          <button className='btn btn-primary' disabled={isRunning} onClick={() => comRandomBoard()}>Random</button>
         </div>
       </div>
     )
