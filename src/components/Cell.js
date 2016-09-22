@@ -1,24 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { toggleCell } from './../actions/index';
 
 class Cell extends React.Component {
 
-  render() {
-    const { arr, row, cell } = this.props;
-    const fill = arr[row][cell];
+  handleClick() {
+    const { arr, row, cell} = this.props;
+    this.props.toggleCell(arr, row, cell);
+  }
 
-    let style = fill === 1 ? 'cell-div full' : 'cell-div';
+  render() {
+    const { fill } = this.props;
+    let style = fill ? 'cell-div full' : 'cell-div';
 
     return (
-      <div className={style}>
+      <div onClick={this.handleClick.bind(this)} className={style}>
       </div>
     );
   }
+
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     arr: state.grid,
+    fill: state.grid[ownProps.row][ownProps.cell]
   }
 }
-export default connect(mapStateToProps)(Cell);
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({toggleCell}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cell);

@@ -1,21 +1,70 @@
-export const getGrid = (rows, cells) => {
+export const getInitGrid = (rows, cells) => {
+  console.log('getInitGrid');
   const grid = generateGrid(rows, cells);
+  const sum = reduceNestedArray(grid);
   return {
-    type: 'UPDATE_GRID',
-    payload: grid
+    type: 'INIT_GRID',
+    payload: { grid, sum }
   }
 }
 
 export const startGame = () => {
   return {
-    type: 'START_GAME'
+    type: 'START_GAME',
   }
 }
+
+export const resetCommand = () => {
+  return {
+    type: 'RESET_COMMAND'
+  }
+}
+
+// export const kickStart = () => {
+//   return {
+//     type: 'KICKSTART'
+//   }
+// }
 
 export const stopGame = () => {
   return {
     type: 'STOP_GAME'
   }
+}
+
+export const saveIntervalID = (id) => {
+  return {
+    type: 'SAVE_INTERVAL_ID',
+    payload: id
+  }
+}
+
+export const setIntervalNull = () => {
+  return {
+    type: 'SET_INTERVAL_NULL'
+  }
+}
+
+export const toggleCell = (grid, row, cell) => {
+  const currentCell = grid[row][cell];
+  grid[row][cell] ? grid[row][cell] = 0 : grid[row][cell] = 1
+  const sum = reduceNestedArray(grid);
+  return {
+    type: 'UPDATE_GRID_NOGEN',
+    payload: { grid, sum }
+  }
+}
+
+export const reduceNestedArray = (arr) => {
+  const rows = arr.length;
+  const cols = arr[0].length;
+  let sum = 0;
+
+  for (let i = 0; i < rows; i++) {
+    sum += arr[i].reduce((a, b) => a + b, 0)
+  }
+  console.log(sum);
+  return sum;
 }
 
 export function generateGrid(rows, cells) {
@@ -34,11 +83,52 @@ export function generateGrid(rows, cells) {
   return randArray;
 }
 
-export const getNextGen = (grid) => {
-  const newGrid = calcNextGen(grid);
+export const comClearBoard = () => {
+  return {
+    type: 'COMMAND_CLEAR_BOARD'
+  }
+}
+
+export const getNewBoard = (arr, gridCount) => {
+  if (gridCount === 0) {
+    return {
+      type: 'STOP_GAME'
+    }
+  }
+  const grid = calcNextGen(arr)
+  const sum = reduceNestedArray(grid)
   return {
     type: 'UPDATE_GRID',
-    payload: newGrid
+    payload: { grid, sum }
+    }
+}
+
+export const clearBoard = (rows, cells) => {
+  let grid = [];
+
+  for (let i = 0; i < rows; i++) {
+    let row = [];
+    for (let j = 0; j < cells; j++) {
+      row.push(0);
+    }
+    grid.push(row)
+  }
+
+  return {
+    type: 'CLEAR_BOARD',
+    payload: { grid }
+  }
+}
+
+export const isRunning = () => {
+  return {
+    type: 'IS_RUNNING'
+  }
+}
+
+export const notRunning = () => {
+  return {
+    type: 'NOT_RUNNING'
   }
 }
 
@@ -79,11 +169,13 @@ export function calcNextGen(grid) {
   const rows = grid.length;
   const cells = grid[0].length;
   let newGrid = [];
+  // let sum = 0;
   for (let i = 0; i < rows; i++) {
     let newRow = [];
     for (let j = 0; j < cells; j++) {
       newRow.push(newCell(grid, i, j));
     }
+    // sum += newRow.reduce((a, b) => a + b, 0)
     newGrid.push(newRow);
   }
   return newGrid;
